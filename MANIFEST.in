@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include express_tally *.css
+recursive-include express_tally *.csv
+recursive-include express_tally *.html
+recursive-include express_tally *.ico
+recursive-include express_tally *.js
+recursive-include express_tally *.json
+recursive-include express_tally *.md
+recursive-include express_tally *.png
+recursive-include express_tally *.py
+recursive-include express_tally *.svg
+recursive-include express_tally *.txt
+recursive-exclude express_tally *.pyc

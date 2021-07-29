@@ -173,3 +173,4 @@ user_data_fields = [
 # 	"express_tally.auth.validate"
 # ]
 
+fixtures = ['Custom Fields']

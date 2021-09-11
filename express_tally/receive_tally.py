@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import frappe
 import json
 
-
 @frappe.whitelist()
 def customer_group():
     payload = json.loads(frappe.request.data)
@@ -298,3 +297,64 @@ def create_address(customer):
     except Exception as e:
         print(str(e))
         # return {'name': customer['customer_name'], 'tally_object': 'Ledger_Address', 'message': str(e)}
+
+
+
+
+@frappe.whitelist()
+def uom():
+    payload = json.loads(frappe.request.data)
+    uoms = payload['data']
+
+    tally_response = []
+
+    for uom in uoms:
+        uom_exists = frappe.db.exists(
+            uom['doctype'], uom['uom_name'])
+        if not uom_exists:
+            try:
+                doc = frappe.get_doc(uom)
+                doc.insert()
+                tally_response.append(
+                    {'name': uom['uom_name'], 'tally_object': 'Unit', 'message': 'Success'})
+            except Exception as e:
+                tally_response.append(
+                    {'name': uom['uom_name'], 'tally_object': 'Unit', 'message': str(e)})
+
+    return {"status": True, 'data': tally_response}
+
+
+
+@frappe.whitelist()
+def item():
+    payload = json.loads(frappe.request.data)
+    items = payload['data']
+
+    tally_response = []
+
+    for item in items:
+        item_exists = frappe.db.exists(
+            'Item', item['item_name'])
+        if not item_exists:
+            try:
+                doc = frappe.get_doc(item)
+                doc.insert()
+                tally_response.append(
+                    {'name': item['item_name'], 'tally_object': 'Stock Item', 'message': 'Success'})
+            except Exception as e:
+                tally_response.append(
+                    {'name': item['item_name'], 'tally_object': 'Stock Item', 'message': str(e)})
+        else:
+            try:
+                frappe.db.set_value(item['doctype'], item['item_name'], {
+                    "item_group_name": item['item_group_name'],
+                    "is_group": item['is_group']
+                })
+
+                tally_response.append(
+                    {'name': item['item_name'], 'tally_object': 'Stock Item', 'message': 'Success'})
+            except Exception as e:
+                tally_response.append(
+                    {'name': item['item_name'], 'tally_object': 'Stock ITem', 'message': str(e)})
+
+    return {"status": True, 'data': tally_response}

@@ -195,8 +195,55 @@ def customer():
     return {"status": True, 'data': tally_response}
 
 
+@frappe.whitelist()
+def supplier():
+    payload = json.loads(frappe.request.data)
+    suppliers = payload['data']
+
+    tally_response = []
+
+    for supplier in suppliers:
+        is_exists = frappe.db.exists(
+            supplier['doctype'], supplier['supplier_name'])
+        if not is_exists:
+            try:
+                doc = frappe.get_doc(supplier)
+                doc.insert()
+
+                create_contact(supplier)
+                create_address(supplier)
+
+                tally_response.append(
+                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': 'Success'})
+            except Exception as e:
+                tally_response.append(
+                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': str(e)})
+        else:
+            try:
+                frappe.db.set_value(supplier['doctype'], supplier['supplier_name'], {
+                    "supplier_name": supplier['supplier_name'],
+                    "supplier_type": supplier['supplier_type'],
+                    "supplier_group": supplier['supplier_group'],
+                    "territory": supplier['territory'],
+                    "tax_category": supplier['tax_category'],
+                    "default_currency": supplier['default_currency'],
+                    "default_price_list": supplier['default_price_list']
+                })
+
+                tally_response.append(
+                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': 'Success'})
+            except Exception as e:
+                tally_response.append(
+                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': str(e)})
+
+    return {"status": True, 'data': tally_response}    
+
+
 def create_contact(customer):
     try:
+        doctype = customer['doctype']
+        cus_name = customer['customer_name'] if doctype == 'Customer' else customer['supplier_name']
+
         req = {
             "name": customer['ledgercontact'],
             "first_name": customer['ledgercontact'],
@@ -233,9 +280,9 @@ def create_contact(customer):
                     "parent": customer['ledgercontact'],
                     "parentfield": "links",
                     "parenttype": "Contact",
-                    "link_doctype": "Customer",
-                    "link_name": customer['customer_name'],
-                    "link_title": customer['customer_name'],
+                    "link_doctype": doctype,
+                    "link_name": cus_name,
+                    "link_title": cus_name,
                     "doctype": "Dynamic Link"
                 }
             ],
@@ -258,10 +305,12 @@ def create_address(customer):
         address2 = customer['address2'] if 'address2' in customer else ""
         address3 = customer['address3'] if 'address3' in customer else ""
         address4 = customer['address4'] if 'address4' in customer else ""
+        doctype = customer['doctype']
+        cus_name = customer['customer_name'] if doctype == 'Customer' else customer['supplier_name']
 
         req = {
-            "name": customer['customer_name']+"-Billing",
-            "address_title": customer['customer_name'],
+            "name": cus_name+"-Billing",
+            "address_title": cus_name,
             "address_type": "Billing",
             "address_line1": address1 + " " + address2,
             "address_line2": address3 + " " + address4,
@@ -279,12 +328,12 @@ def create_address(customer):
             "doctype": "Address",
             "links": [
                 {
-                    "parent": customer['customer_name']+"-Billing",
+                    "parent": cus_name+"-Billing",
                     "parentfield": "links",
                     "parenttype": "Address",
-                    "link_doctype": "Customer",
-                    "link_name": customer['customer_name'],
-                    "link_title": customer['customer_name'],
+                    "link_doctype": doctype,
+                    "link_name": cus_name,
+                    "link_title": cus_name,
                     "doctype": "Dynamic Link"
                 }
             ]

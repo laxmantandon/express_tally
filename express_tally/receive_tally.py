@@ -160,11 +160,14 @@ def customer():
             customer['doctype'], customer['customer_name'])
         if not is_exists:
             try:
+                create_account(customer)
+
                 doc = frappe.get_doc(customer)
                 doc.insert()
 
                 create_contact(customer)
                 create_address(customer)
+
 
                 tally_response.append(
                     {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': 'Success'})
@@ -196,6 +199,70 @@ def customer():
 
 
 @frappe.whitelist()
+def customer_opening():
+    payload = json.loads(frappe.request.data)
+    bills = payload['data']
+
+    tally_response = []
+    for bill in bills:
+        try:
+            req = {
+                # "name": bill['name'],
+                "customer": bill['customer'],
+                "customer_name": bill['customer'],
+                "company": bill['company'],
+                "currency": "INR",
+                "set_postin_time": True,
+                "price_list_currency": "INR",
+                "posting_date": bill['posting_date'],
+                "due_date": bill['due_date'],
+                "debit_to": bill['debit_to'], #"Test 3 Customer - ETPL",
+                "party_account_currency": "INR",
+                "is_opening": 'Yes',
+                "grand_total": bill['amount'],
+                "against_income_account": bill['against_income_account'],#"Temporary Opening - ETPL",
+                "doctype": "Sales Invoice",
+                "items": [
+                    {
+                    "item_name": "Opening Invoice Item",
+                    "description": "Opening Invoice Item",
+                    "qty": 1,
+                    "stock_uom": "Nos",
+                    "uom": "Nos",
+                    "conversion_factor": 1,
+                    "stock_qty": 1,
+                    "rate": bill['amount'],
+                    "amount": bill['amount'],
+                    "income_account": bill['against_income_account'],
+                    "doctype": "Sales Invoice Item"
+                    }
+                ],
+                "payment_schedule": [
+                    {
+                    "due_date": bill['due_date'],
+                    "invoice_portion": 100,
+                    "payment_amount": bill['amount'],
+                    "outstanding": bill['amount'],
+                    "paid_amount": 0,
+                    "base_payment_amount": bill['amount'],
+                    "doctype": "Payment Schedule"
+                    }
+                ],
+            }
+
+            doc = frappe.get_doc(req)
+            # doc.insert()
+            doc.submit()
+            tally_response.append(
+                    {'name': bill['customer'], 'tally_object': 'Ledger', 'message': 'Success'})
+        except Exception as e:
+            tally_response.append(
+                    {'name': bill['customer'], 'tally_object': 'Ledger', 'message': str(e)})
+
+    return {"status": True, 'data': tally_response}    
+
+
+@frappe.whitelist()
 def supplier():
     payload = json.loads(frappe.request.data)
     suppliers = payload['data']
@@ -207,6 +274,8 @@ def supplier():
             supplier['doctype'], supplier['supplier_name'])
         if not is_exists:
             try:
+                create_account(supplier)
+
                 doc = frappe.get_doc(supplier)
                 doc.insert()
 
@@ -237,6 +306,33 @@ def supplier():
                     {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}    
+
+
+def create_account(customer):
+    try:
+        doctype = customer['doctype']
+        cus_name = customer['customer_name'] if doctype == 'Customer' else customer['supplier_name']
+        parent_account = 'Accounts Receivable - ETPL' if doctype == 'Customer' else 'Accounts Payable - ETPL'
+        account_type = 'Receivable' if doctype == 'Customer' else 'Payable'
+
+        req = {
+            "company": customer['company'],
+            "account_name": cus_name,
+            "account_currency": "INR",
+            "doctype": "Account",
+            "parent_account": parent_account,
+            "account_type": account_type
+        }
+
+        # print(req)
+        doc = frappe.get_doc(req)
+        doc.insert()
+
+        # return {'name': customer['customer_name'], 'tally_object': 'Ledger_Contact', 'message': 'Success'}
+        print('Success- Account')
+    except Exception as e:
+        print(str(e))
+        # return {'name': customer['customer_name'], 'tally_object': 'Ledger_Contact', 'message': str(e)}
 
 
 def create_contact(customer):
@@ -393,17 +489,41 @@ def item():
             except Exception as e:
                 tally_response.append(
                     {'name': item['item_name'], 'tally_object': 'Stock Item', 'message': str(e)})
-        else:
-            try:
-                frappe.db.set_value(item['doctype'], item['item_name'], {
-                    "item_group_name": item['item_group_name'],
-                    "is_group": item['is_group']
-                })
+        # else:
+        #     try:
+        #         frappe.db.set_value(item['doctype'], item['item_name'], {
+        #             "item_group_name": item['item_group_name'],
+        #             "is_group": item['is_group']
+        #         })
 
+        #         tally_response.append(
+        #             {'name': item['item_name'], 'tally_object': 'Stock Item', 'message': 'Success'})
+        #     except Exception as e:
+        #         tally_response.append(
+        #             {'name': item['item_name'], 'tally_object': 'Stock ITem', 'message': str(e)})
+
+    return {"status": True, 'data': tally_response}
+
+
+@frappe.whitelist()
+def sales_invoice():
+    payload = json.loads(frappe.request.data)
+    sales = payload['data']
+    
+    tally_response = []
+
+    for sale in sales:
+        sales_exists = frappe.db.exists(
+            'Sales Invoice', sale['webstatus_docname'])
+        if not sales_exists:
+            try:
+                doc = frappe.get_doc(sale)
+                doc.insert()
+                doc.submit()
                 tally_response.append(
-                    {'name': item['item_name'], 'tally_object': 'Stock Item', 'message': 'Success'})
+                    {'name': sale['tally_masterid'], 'docname': doc.name, 'tally_object': 'Sales Voucher', 'message': 'Success'})
             except Exception as e:
                 tally_response.append(
-                    {'name': item['item_name'], 'tally_object': 'Stock ITem', 'message': str(e)})
+                    {'name': sale['tally_masterid'], 'tally_object': 'Sales Voucher', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}

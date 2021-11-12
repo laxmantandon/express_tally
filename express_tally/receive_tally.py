@@ -22,19 +22,19 @@ def customer_group():
             except Exception as e:
                 tally_response.append(
                     {'name': group['customer_group_name'], 'tally_object': 'Group', 'message': str(e)})
-        else:
-            try:
-                frappe.db.set_value(group['doctype'], group['customer_group_name'], {
-                    "customer_group_name": group['customer_group_name'],
-                    "is_group": group['is_group'],
-                    "parent_customer_group": group['parent_customer_group'],
-                })
+        # else:
+        #     try:
+        #         frappe.db.set_value(group['doctype'], group['customer_group_name'], {
+        #             "customer_group_name": group['customer_group_name'],
+        #             "is_group": group['is_group'],
+        #             "parent_customer_group": group['parent_customer_group'],
+        #         })
 
-                tally_response.append(
-                    {'name': group['customer_group_name'], 'tally_object': 'Group', 'message': 'Success'})
-            except Exception as e:
-                tally_response.append(
-                    {'name': group['customer_group_name'], 'tally_object': 'Group', 'message': str(e)})
+        #         tally_response.append(
+        #             {'name': group['customer_group_name'], 'tally_object': 'Group', 'message': 'Success'})
+        #     except Exception as e:
+        #         tally_response.append(
+        #             {'name': group['customer_group_name'], 'tally_object': 'Group', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}
 
@@ -58,19 +58,19 @@ def supplier_group():
             except Exception as e:
                 tally_response.append(
                     {'name': group['supplier_group_name'], 'tally_object': 'Group', 'message': str(e)})
-        else:
-            try:
-                frappe.db.set_value(group['doctype'], group['supplier_group_name'], {
-                    "supplier_group_name": group['suppiler_group_name'],
-                    "is_group": group['is_group'],
-                    "parent_supplier_group": group['parent_supplier_group'],
-                })
+        # else:
+        #     try:
+        #         frappe.db.set_value(group['doctype'], group['supplier_group_name'], {
+        #             "supplier_group_name": group['suppiler_group_name'],
+        #             "is_group": group['is_group'],
+        #             "parent_supplier_group": group['parent_supplier_group'],
+        #         })
 
-                tally_response.append(
-                    {'name': group['supplier_group_name'], 'tally_object': 'Group', 'message': 'Success'})
-            except Exception as e:
-                tally_response.append(
-                    {'name': group['supplier_group_name'], 'tally_object': 'Group', 'message': str(e)})
+        #         tally_response.append(
+        #             {'name': group['supplier_group_name'], 'tally_object': 'Group', 'message': 'Success'})
+        #     except Exception as e:
+        #         tally_response.append(
+        #             {'name': group['supplier_group_name'], 'tally_object': 'Group', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}
 
@@ -94,19 +94,19 @@ def item_group():
             except Exception as e:
                 tally_response.append(
                     {'name': stockgroup['item_group_name'], 'tally_object': 'Stock Group', 'message': str(e)})
-        else:
-            try:
-                frappe.db.set_value(stockgroup['doctype'], stockgroup['item_group_name'], {
-                    "item_group_name": stockgroup['item_group_name'],
-                    "is_group": stockgroup['is_group'],
-                    "parent_item_group": stockgroup['parent_item_group'],
-                })
+        # else:
+        #     try:
+        #         frappe.db.set_value(stockgroup['doctype'], stockgroup['item_group_name'], {
+        #             "item_group_name": stockgroup['item_group_name'],
+        #             "is_group": stockgroup['is_group'],
+        #             "parent_item_group": stockgroup['parent_item_group'],
+        #         })
 
-                tally_response.append(
-                    {'name': stockgroup['item_group_name'], 'tally_object': 'Stock Group', 'message': 'Success'})
-            except Exception as e:
-                tally_response.append(
-                    {'name': stockgroup['item_group_name'], 'tally_object': 'Stock Group', 'message': str(e)})
+        #         tally_response.append(
+        #             {'name': stockgroup['item_group_name'], 'tally_object': 'Stock Group', 'message': 'Success'})
+        #     except Exception as e:
+        #         tally_response.append(
+        #             {'name': stockgroup['item_group_name'], 'tally_object': 'Stock Group', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}
 
@@ -130,20 +130,20 @@ def warehouse():
             except Exception as e:
                 tally_response.append(
                     {'name': warehouse['item_group_name'], 'tally_object': 'Godown', 'message': str(e)})
-        else:
-            try:
-                frappe.db.set_value(warehouse['doctype'], warehouse['warehouse_name'], {
-                    "warehouse_name": warehouse['warehouse_name'],
-                    "is_group": warehouse['is_group'],
-                    "parent_warehouse": warehouse['parent_warehouse'],
-                    "company": warehouse['company']
-                })
+        # else:
+        #     try:
+        #         frappe.db.set_value(warehouse['doctype'], warehouse['warehouse_name'], {
+        #             "warehouse_name": warehouse['warehouse_name'],
+        #             "is_group": warehouse['is_group'],
+        #             "parent_warehouse": warehouse['parent_warehouse'],
+        #             "company": warehouse['company']
+        #         })
 
-                tally_response.append(
-                    {'name': warehouse['warehouse_name'], 'tally_object': 'Godown', 'message': 'Success'})
-            except Exception as e:
-                tally_response.append(
-                    {'name': warehouse['warehouse_name'], 'tally_object': 'Godown', 'message': str(e)})
+        #         tally_response.append(
+        #             {'name': warehouse['warehouse_name'], 'tally_object': 'Godown', 'message': 'Success'})
+        #     except Exception as e:
+        #         tally_response.append(
+        #             {'name': warehouse['warehouse_name'], 'tally_object': 'Godown', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}
 
@@ -174,26 +174,26 @@ def customer():
             except Exception as e:
                 tally_response.append(
                     {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': str(e)})
-        else:
-            try:
-                frappe.db.set_value(customer['doctype'], customer['customer_name'], {
-                    "customer_name": customer['customer_name'],
-                    "customer_type": customer['customer_type'],
-                    "customer_group": customer['customer_group'],
-                    "territory": customer['territory'],
-                    "tax_category": customer['tax_category'],
-                    "so_required": customer['so_required'],
-                    "dn_required": customer['dn_required'],
-                    "default_currency": customer['default_currency'],
-                    "default_price_list": customer['default_price_list'],
-                    "item_group_limit": customer['item_group_limit'] if 'item_group_limit' in customer else ""
-                })
+        # else:
+        #     try:
+        #         frappe.db.set_value(customer['doctype'], customer['customer_name'], {
+        #             "customer_name": customer['customer_name'],
+        #             "customer_type": customer['customer_type'],
+        #             "customer_group": customer['customer_group'],
+        #             "territory": customer['territory'],
+        #             "tax_category": customer['tax_category'],
+        #             "so_required": customer['so_required'],
+        #             "dn_required": customer['dn_required'],
+        #             "default_currency": customer['default_currency'],
+        #             "default_price_list": customer['default_price_list'],
+        #             "item_group_limit": customer['item_group_limit'] if 'item_group_limit' in customer else ""
+        #         })
 
-                tally_response.append(
-                    {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': 'Success'})
-            except Exception as e:
-                tally_response.append(
-                    {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': str(e)})
+        #         tally_response.append(
+        #             {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': 'Success'})
+        #     except Exception as e:
+        #         tally_response.append(
+        #             {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}
 
@@ -287,23 +287,23 @@ def supplier():
             except Exception as e:
                 tally_response.append(
                     {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': str(e)})
-        else:
-            try:
-                frappe.db.set_value(supplier['doctype'], supplier['supplier_name'], {
-                    "supplier_name": supplier['supplier_name'],
-                    "supplier_type": supplier['supplier_type'],
-                    "supplier_group": supplier['supplier_group'],
-                    "territory": supplier['territory'],
-                    "tax_category": supplier['tax_category'],
-                    "default_currency": supplier['default_currency'],
-                    "default_price_list": supplier['default_price_list']
-                })
+        # else:
+        #     try:
+        #         frappe.db.set_value(supplier['doctype'], supplier['supplier_name'], {
+        #             "supplier_name": supplier['supplier_name'],
+        #             "supplier_type": supplier['supplier_type'],
+        #             "supplier_group": supplier['supplier_group'],
+        #             "territory": supplier['territory'],
+        #             "tax_category": supplier['tax_category'],
+        #             "default_currency": supplier['default_currency'],
+        #             "default_price_list": supplier['default_price_list']
+        #         })
 
-                tally_response.append(
-                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': 'Success'})
-            except Exception as e:
-                tally_response.append(
-                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': str(e)})
+        #         tally_response.append(
+        #             {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': 'Success'})
+        #     except Exception as e:
+        #         tally_response.append(
+        #             {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}    
 
@@ -489,6 +489,9 @@ def item():
             except Exception as e:
                 tally_response.append(
                     {'name': item['item_name'], 'tally_object': 'Stock Item', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': item['item_name'], 'tally_object': 'Stock Item', 'message': 'Already Exists'})
         # else:
         #     try:
         #         frappe.db.set_value(item['doctype'], item['item_name'], {

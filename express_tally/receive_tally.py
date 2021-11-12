@@ -478,6 +478,7 @@ def item():
     tally_response = []
 
     for item in items:
+        create_hsn(item)
         item_exists = frappe.db.exists(
             'Item', item['item_name'])
         if not item_exists:
@@ -507,6 +508,17 @@ def item():
 
     return {"status": True, 'data': tally_response}
 
+def create_hsn(item):
+    if not frappe.db.exists('GST HSN Code', item['gst_hsn_code']):
+        frappe.get_doc()
+
+        req = {
+            "hsn_code": item['gst_hsn_code'],
+            "doctype": "GST HSN Code"
+        }
+
+        doc = frappe.get_doc(req)
+        doc.insert()
 
 @frappe.whitelist()
 def sales_invoice():
@@ -522,7 +534,7 @@ def sales_invoice():
             try:
                 doc = frappe.get_doc(sale)
                 doc.insert()
-                doc.submit()
+                # doc.submit()
                 tally_response.append(
                     {'name': sale['tally_masterid'], 'docname': doc.name, 'tally_object': 'Sales Voucher', 'message': 'Success'})
             except Exception as e:

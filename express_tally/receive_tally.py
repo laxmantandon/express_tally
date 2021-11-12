@@ -510,7 +510,6 @@ def item():
 
 def create_hsn(item):
     if not frappe.db.exists('GST HSN Code', item['gst_hsn_code']):
-        frappe.get_doc()
 
         req = {
             "hsn_code": item['gst_hsn_code'],

@@ -521,7 +521,7 @@ def create_hsn(item):
             doc.insert()
 
 @frappe.whitelist()
-def sales_invoice():
+def voucher():
     payload = json.loads(frappe.request.data)
     sales = payload['data']
     
@@ -529,16 +529,17 @@ def sales_invoice():
 
     for sale in sales:
         sales_exists = frappe.db.exists(
-            'Sales Invoice', sale['webstatus_docname'])
+            sale['doctype'], sale['webstatus_docname'])
         if not sales_exists:
             try:
                 doc = frappe.get_doc(sale)
                 doc.insert()
                 # doc.submit()
                 tally_response.append(
-                    {'name': sale['tally_masterid'], 'docname': doc.name, 'tally_object': 'Sales Voucher', 'message': 'Success'})
+                    {'name': sale['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'})
             except Exception as e:
                 tally_response.append(
-                    {'name': sale['tally_masterid'], 'tally_object': 'Sales Voucher', 'message': str(e)})
+                    {'name': sale['tally_masterid'], 'tally_object': 'voucher', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}
+    

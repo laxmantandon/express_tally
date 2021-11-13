@@ -22,6 +22,9 @@ def customer_group():
             except Exception as e:
                 tally_response.append(
                     {'name': group['customer_group_name'], 'tally_object': 'Group', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': group['customer_group_name'], 'tally_object': 'Group', 'message': 'Already Exists'})
         # else:
         #     try:
         #         frappe.db.set_value(group['doctype'], group['customer_group_name'], {
@@ -58,6 +61,9 @@ def supplier_group():
             except Exception as e:
                 tally_response.append(
                     {'name': group['supplier_group_name'], 'tally_object': 'Group', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': group['supplier_group_name'], 'tally_object': 'Group', 'message': 'Already Exists'})
         # else:
         #     try:
         #         frappe.db.set_value(group['doctype'], group['supplier_group_name'], {
@@ -94,6 +100,9 @@ def item_group():
             except Exception as e:
                 tally_response.append(
                     {'name': stockgroup['item_group_name'], 'tally_object': 'Stock Group', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': stockgroup['item_group_name'], 'tally_object': 'Stock Group', 'message': 'Already Exists'})
         # else:
         #     try:
         #         frappe.db.set_value(stockgroup['doctype'], stockgroup['item_group_name'], {
@@ -130,6 +139,9 @@ def warehouse():
             except Exception as e:
                 tally_response.append(
                     {'name': warehouse['item_group_name'], 'tally_object': 'Godown', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': warehouse['warehouse_name'], 'tally_object': 'Godown', 'message': 'Already Exists'})
         # else:
         #     try:
         #         frappe.db.set_value(warehouse['doctype'], warehouse['warehouse_name'], {
@@ -174,6 +186,10 @@ def customer():
             except Exception as e:
                 tally_response.append(
                     {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': 'Already Exists'})
+
         # else:
         #     try:
         #         frappe.db.set_value(customer['doctype'], customer['customer_name'], {
@@ -287,6 +303,9 @@ def supplier():
             except Exception as e:
                 tally_response.append(
                     {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': 'Already Exists'})
         # else:
         #     try:
         #         frappe.db.set_value(supplier['doctype'], supplier['supplier_name'], {
@@ -465,6 +484,9 @@ def uom():
             except Exception as e:
                 tally_response.append(
                     {'name': uom['uom_name'], 'tally_object': 'Unit', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': uom['uom_name'], 'tally_object': 'Unit', 'message': 'Already Exists'})
 
     return {"status": True, 'data': tally_response}
 
@@ -540,6 +562,9 @@ def voucher():
             except Exception as e:
                 tally_response.append(
                     {'name': sale['tally_masterid'], 'tally_object': 'voucher', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': sale['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Already Exists'})
 
     return {"status": True, 'data': tally_response}
     

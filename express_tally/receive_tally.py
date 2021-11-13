@@ -509,15 +509,16 @@ def item():
     return {"status": True, 'data': tally_response}
 
 def create_hsn(item):
-    if not frappe.db.exists('GST HSN Code', item['gst_hsn_code']):
+    if 'gst_hsn_code' in item:
+        if not frappe.db.exists('GST HSN Code', item['gst_hsn_code']):
 
-        req = {
-            "hsn_code": item['gst_hsn_code'],
-            "doctype": "GST HSN Code"
-        }
+            req = {
+                "hsn_code": item['gst_hsn_code'],
+                "doctype": "GST HSN Code"
+            }
 
-        doc = frappe.get_doc(req)
-        doc.insert()
+            doc = frappe.get_doc(req)
+            doc.insert()
 
 @frappe.whitelist()
 def sales_invoice():

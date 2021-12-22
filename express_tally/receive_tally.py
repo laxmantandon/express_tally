@@ -217,7 +217,7 @@ def customer():
 @frappe.whitelist()
 def customer_opening():
     payload = json.loads(frappe.request.data)
-    bills = payload['data']
+    bills = payload['data'][0]
 
     tally_response = []
     for bill in bills['bills']:

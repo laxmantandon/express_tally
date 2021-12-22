@@ -220,21 +220,22 @@ def customer_opening():
     bills = payload['data']
 
     tally_response = []
-    for bill in bills:
+    for bill in bills['bills']:
         try:
             req = {
-                # "name": bill['name'],
+                "remarks": bill['bill_name'],
                 "customer": bill['customer'],
                 "customer_name": bill['customer'],
                 "company": bill['company'],
                 "currency": "INR",
-                "set_postin_time": True,
+                "set_posting_time": True,
                 "price_list_currency": "INR",
                 "posting_date": bill['posting_date'],
                 "due_date": bill['due_date'],
                 "debit_to": bill['debit_to'], #"Test 3 Customer - ETPL",
                 "party_account_currency": "INR",
                 "is_opening": 'Yes',
+                "is_return": bill['is_return'],
                 "grand_total": bill['amount'],
                 "against_income_account": bill['against_income_account'],#"Temporary Opening - ETPL",
                 "doctype": "Sales Invoice",
@@ -242,12 +243,12 @@ def customer_opening():
                     {
                     "item_name": "Opening Invoice Item",
                     "description": "Opening Invoice Item",
-                    "qty": 1,
+                    "qty": 1 if bill['is_return'] == 0 else -1,
                     "stock_uom": "Nos",
                     "uom": "Nos",
                     "conversion_factor": 1,
-                    "stock_qty": 1,
-                    "rate": bill['amount'],
+                    "stock_qty": 1 if bill['is_return'] == 0 else -1,
+                    "rate": abs(bill['amount']),
                     "amount": bill['amount'],
                     "income_account": bill['against_income_account'],
                     "doctype": "Sales Invoice Item"
@@ -267,13 +268,14 @@ def customer_opening():
             }
 
             doc = frappe.get_doc(req)
-            # doc.insert()
+            doc.flags.ignore_mandatory = True
+            doc.insert()
             doc.submit()
             tally_response.append(
-                    {'name': bill['customer'], 'tally_object': 'Ledger', 'message': 'Success'})
+                    {'name': bill['customer'], 'tally_object': 'Ledger', 'message': 'Success', 'req': req})
         except Exception as e:
             tally_response.append(
-                    {'name': bill['customer'], 'tally_object': 'Ledger', 'message': str(e)})
+                    {'name': bill['customer'], 'tally_object': 'Ledger', 'message': str(e), 'req': req})
 
     return {"status": True, 'data': tally_response}    
 

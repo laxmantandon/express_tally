@@ -559,7 +559,7 @@ def voucher():
             try:
                 doc = frappe.get_doc(sale)
                 doc.insert()
-                # doc.submit()
+                doc.submit()
                 tally_response.append(
                     {'name': sale['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'})
             except Exception as e:

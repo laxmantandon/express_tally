@@ -273,10 +273,76 @@ def customer_opening():
                 doc.insert()
                 doc.submit()
                 tally_response.append(
-                        {'name': bill['customer'], 'tally_object': 'Ledger', 'message': 'Success', 'req': req})
+                        {'name': bill['customer'], 'tally_object': 'Ledger', 'message': 'Success'})
             except Exception as e:
                 tally_response.append(
-                        {'name': bill['customer'], 'tally_object': 'Ledger', 'message': str(e), 'req': req})
+                        {'name': bill['customer'], 'tally_object': 'Ledger', 'message': str(e)})
+
+    return {"status": True, 'data': tally_response}    
+
+@frappe.whitelist()
+def supplier_opening():
+    payload = json.loads(frappe.request.data)
+    bills = payload['data']
+
+    tally_response = []
+    for b in bills:
+        for bill in b['bills']:
+            try:
+                req = {
+                    "remarks": bill['bill_name'],
+                    "supplier": bill['supplier'],
+                    "supplier_name": bill['supplier'],
+                    "company": bill['company'],
+                    "currency": "INR",
+                    "set_posting_time": True,
+                    "price_list_currency": "INR",
+                    "posting_date": bill['posting_date'],
+                    "due_date": bill['due_date'],
+                    "credit_to": bill['credit_to'], #"Test 3 Customer - ETPL",
+                    "party_account_currency": "INR",
+                    "is_opening": 'Yes',
+                    "is_return": bill['is_return'],
+                    "grand_total": bill['amount'],
+                    "against_expense_account": bill['against_expense_account'],#"Temporary Opening - ETPL",
+                    "doctype": "Purchase Invoice",
+                    "items": [
+                        {
+                        "item_name": "Opening Invoice Item",
+                        "description": "Opening Invoice Item",
+                        "qty": 1 if bill['is_return'] == 0 else -1,
+                        "stock_uom": "Nos",
+                        "uom": "Nos",
+                        "conversion_factor": 1,
+                        "stock_qty": 1 if bill['is_return'] == 0 else -1,
+                        "rate": abs(bill['amount']),
+                        "amount": bill['amount'],
+                        "expense_account": bill['against_expense_account'],
+                        "doctype": "Purchase Invoice Item"
+                        }
+                    ],
+                    # "payment_schedule": [
+                    #     {
+                    #     "due_date": bill['due_date'],
+                    #     "invoice_portion": 100,
+                    #     "payment_amount": bill['amount'],
+                    #     "outstanding": bill['amount'],
+                    #     "paid_amount": 0,
+                    #     "base_payment_amount": bill['amount'],
+                    #     "doctype": "Payment Schedule"
+                    #     }
+                    # ],
+                }
+
+                doc = frappe.get_doc(req)
+                doc.flags.ignore_mandatory = True
+                doc.insert()
+                # doc.submit()
+                tally_response.append(
+                        {'name': bill['supplier'], 'tally_object': 'Ledger', 'message': 'Success'})
+            except Exception as e:
+                tally_response.append(
+                        {'name': bill['supplier'], 'tally_object': 'Ledger', 'message': str(e)})
 
     return {"status": True, 'data': tally_response}    
 

@@ -119,7 +119,7 @@ def sales():
             'base_rounded_total', 'rounding_adjustment', 'modified', 'is_return', 'customer', 'customer_name'
             ],
         filters={ 
-            # 'modified' : ['>', payload['date']],
+            'modified' : ['>=', payload['date']],
             'company': payload['company'],
             'docstatus': 1,
             # 'is_synced': ['!=', 'Yes']

@@ -12,7 +12,8 @@ def customer():
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
-            'is_synced': ['!=', 'Yes']
+            'is_synced': ['!=', 'Yes'],
+            'branch': payload['branch']
             },
         limit=100
         )
@@ -40,7 +41,8 @@ def supplier():
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
-            'is_synced': ['!=', 'Yes']
+            'is_synced': ['!=', 'Yes'],
+            'branch': payload['branch']
             },
         limit=100
         )
@@ -89,7 +91,8 @@ def purchase():
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
             'docstatus': 1,
-            'is_synced': ['!=', 'Yes']
+            'is_synced': ['!=', 'Yes'],
+            'branch': payload['branch']
             },
         limit=100
         )
@@ -122,7 +125,8 @@ def sales():
             'posting_date' : ['>=', payload['date']],
             'company': payload['company'],
             'docstatus': 1,
-            # 'is_synced': ['!=', 'Yes']
+            'is_synced': ['!=', 'Yes'],
+            'branch': payload['branch']
             },
         limit=100
         )
@@ -156,7 +160,8 @@ def payments():
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
             'docstatus': 1,
-            # 'is_synced': ['!=', 'Yes']
+            'is_synced': ['!=', 'Yes'],
+            'branch': payload['branch']
             },
         limit=100
         )

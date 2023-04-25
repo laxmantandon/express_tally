@@ -179,6 +179,39 @@ def payments():
 
     return payments
 
+@frappe.whitelist()
+def journal():
+
+    payload = json.loads(frappe.request.data)
+    payments = frappe.db.get_all(
+        'Journal Entry',
+        fields=[
+            'name', 'posting_date', 'docstatus', 'company', 'party', 'party_name',
+            'voucher_type', 'branch', 'mspl_voucher_type', 'cheque_no', 'cheque_date', 'user_remark'
+            ],
+        filters={ 
+            # 'modified' : ['>', payload['date']],
+            'company': payload['company'],
+            'docstatus': 1,
+            'is_synced': ['!=', 'Yes'],
+            'branch': payload['branch']
+            },
+        limit=100
+        )
+    if payments:
+        for payment in payments:
+            payment_no = payment['name']
+
+            if payment_no:
+                pi_no = frappe.get_doc('Payment Entry', payment_no)
+
+                if pi_no:
+                    payment['treferences'] = pi_no
+                else:
+                    payment['treferences'] = {}
+
+    return payments
+
 
 
 @frappe.whitelist()

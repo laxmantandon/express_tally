@@ -186,7 +186,7 @@ def journal():
     payments = frappe.db.get_all(
         'Journal Entry',
         fields=[
-            'name', 'posting_date', 'docstatus', 'company', 'party', 'party_name',
+            'name', 'posting_date', 'docstatus', 'company',
             'voucher_type', 'branch', 'mspl_voucher_type', 'cheque_no', 'cheque_date', 'user_remark'
             ],
         filters={ 

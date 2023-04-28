@@ -203,7 +203,7 @@ def journal():
             payment_no = payment['name']
 
             if payment_no:
-                pi_no = frappe.get_doc('Payment Entry', payment_no)
+                pi_no = frappe.get_doc('Journal Entry', payment_no)
 
                 if pi_no:
                     payment['treferences'] = pi_no

@@ -84,7 +84,7 @@ def purchase():
     purchase_invoices = frappe.db.get_all(
         'Purchase Invoice',
         fields=[
-            'name', 'posting_date', 'docstatus', 'company', 'base_grand_total', 'base_net_total', bill_no, bill_date,
+            'name', 'posting_date', 'docstatus', 'company', 'base_grand_total', 'base_net_total', 'bill_no', 'bill_date',
             'base_rounded_total', 'rounding_adjustment', 'modified', 'is_return', 'supplier', 'supplier_name'
             ],
         filters={ 

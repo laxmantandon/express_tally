@@ -194,7 +194,8 @@ def journal():
             'company': payload['company'],
             'docstatus': 1,
             'is_synced': ['!=', 'Yes'],
-            'branch': payload['branch']
+            'branch': payload['branch'],
+            'is_opening': 'No'
             },
         limit=100
         )

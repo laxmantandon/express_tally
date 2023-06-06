@@ -248,4 +248,4 @@ def update_tally_flag(doc, method):
             }
         )
 
-        frappe.db.commit()
+        doc.reload()

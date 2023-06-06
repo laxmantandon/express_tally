@@ -90,7 +90,7 @@ def purchase():
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
-            'docstatus': 1,
+            'docstatus': [">", 0],
             'is_synced': ['!=', 'Yes'],
             'branch': payload['branch']
             },
@@ -124,7 +124,7 @@ def sales():
         filters={ 
             'posting_date' : ['>=', payload['date']],
             'company': payload['company'],
-            'docstatus': 1,
+            'docstatus': [">", 0],
             'is_synced': ['!=', 'Yes'],
             'branch': payload['branch']
             },
@@ -159,7 +159,7 @@ def payments():
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
-            'docstatus': 1,
+            'docstatus': [">", 0],
             'is_synced': ['!=', 'Yes'],
             'branch': payload['branch']
             },
@@ -192,7 +192,7 @@ def journal():
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
-            'docstatus': 1,
+            'docstatus': [">", 0],
             'is_synced': ['!=', 'Yes'],
             'branch': payload['branch'],
             'is_opening': 'No'
@@ -232,7 +232,7 @@ def customer_update():
             }
         )
 
-    frappe.db.commit()
+    # frappe.db.commit()
 
 
 @frappe.whitelist()

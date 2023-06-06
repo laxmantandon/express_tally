@@ -97,6 +97,21 @@ app_license = "MIT"
 #	}
 # }
 
+doc_events = {
+	"Purchase Invoice": {
+		"on_update": "express_tally.send_tally.update_tally_flag",
+		"on_cancel": "express_tally.send_tally.update_tally_flag"
+	},
+	"Sales Invoice": {
+		"on_update": "express_tally.send_tally.update_tally_flag",
+		"on_cancel": "express_tally.send_tally.update_tally_flag"
+	},
+	"Journal Entry": {
+		"on_update": "express_tally.send_tally.update_tally_flag",
+		"on_cancel": "express_tally.send_tally.update_tally_flag"
+	}
+}
+
 # Scheduled Tasks
 # ---------------
 

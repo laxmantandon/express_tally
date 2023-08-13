@@ -59,7 +59,8 @@ Once you've [set up a Frappe site](https://frappeframework.com/docs/v14/user/en/
   - Check Error Log List in ERPNext for errors
   - Alternatively you check tally event log for more info
     
-![image](https://github.com/laxmantandon/express_tally/assets/24727535/3764e7c4-6d2b-4961-a09a-5b012914d66d)
+![image](https://github.com/laxmantandon/express_tally/assets/24727535/726a60b0-7291-4a82-a453-af3eb1d8a2fc)
+
 
 ## Planned Features
 

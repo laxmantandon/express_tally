@@ -39,15 +39,27 @@ Once you've [set up a Frappe site](https://frappeframework.com/docs/v14/user/en/
   ![image](https://github.com/laxmantandon/express_tally/assets/24727535/73558d52-d260-4a38-b0a1-8c2ef307a50b)
 
 * Setting up Auth Keys in Tally Prime
-  F1 -> Addon Features -> F6
+  - From Gateway of Tally -> F1 -> Addon Features -> F6
   Set *Enable ERPNext Integration* to Yes and specify auth keys and other parameters
   
   ![image](https://github.com/laxmantandon/express_tally/assets/24727535/5039845f-6a04-49e2-b45c-4a55933630f7)
 
 * Migrating Data from Tally to ERPNext
-  From Gateway of Tally go to Display -> ERPNext -> Migrate to ERPNext
+  - From Gateway of Tally go to Display -> ERPNext -> Migrate to ERPNext
   
   ![image](https://github.com/laxmantandon/express_tally/assets/24727535/d7029c93-1a44-450b-b2f1-ef3655eb28ce)
+
+* Observe result in ERPNext
+
+![image](https://github.com/laxmantandon/express_tally/assets/24727535/f1b46186-89d0-42fb-9136-1df767adbdb7)
+
+## Errors and Exception Handling 
+* From Gateway of Tally goto -> ERPNext -> Migration -> Exception (select object type )
+  - You can check for exceptions here and make necessary changes in data
+  - Check Error Log List in ERPNext for errors
+  - Alternatively you check tally event log for more info
+    
+![image](https://github.com/laxmantandon/express_tally/assets/24727535/3764e7c4-6d2b-4961-a09a-5b012914d66d)
 
 ## Planned Features
 

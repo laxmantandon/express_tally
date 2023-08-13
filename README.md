@@ -1,26 +1,21 @@
-<div align="center">
+<div align="left">
 
 <h1>Tally To ERPNext Data Migration Tool</h1>
 
-This Application helps synchronizing data from tally to erpnext
+This tool helps migration of data from Tally Prime (Masters and transactions) to ERPNext using frappe rest apis.
+- Migrate Masters (Account, Customer, Suppliers, Contact and Address)
+- Migrate Transactions (Purchase Invoice, Sales Invoice, Payment Entry, Journal Entry)
 
 </div>
 
-
-
-## Introduction
-
-Using this application will help you to migrate your tally data, masters and transactions both using frappe rest apis.
-
-## Key Features
-
-- Migrate Masters (Account, Customer, Suppliers, Contact and Address)
-- Migrates Transactions (Purchase Invoice, Sales Invoice, Payment Entry, Journal Entry)
+## Prerequisite
+* TDL Files https://github.com/laxmantandon/tally_migration_tdl.git
+* Tally Prime
+* ERPNext Active Site 
 
 ## Installation
 
 Once you've [set up a Frappe site](https://frappeframework.com/docs/v14/user/en/installation/), installing Express Tally Integration is simple:
-
 
 1. Download the app using the Bench CLI.
 
@@ -33,6 +28,26 @@ Once you've [set up a Frappe site](https://frappeframework.com/docs/v14/user/en/
     ```bash
     bench --site [site name] install-app express_tally
     ```
+
+
+## Steps to Configure
+* Configure TDL Files in tally
+  - follow instruction on this repo https://github.com/laxmantandon/tally_migration_tdl.git
+
+* Generate Authentication Keys
+  Create a user with appropriate permission and generate api key and secret
+  ![image](https://github.com/laxmantandon/express_tally/assets/24727535/73558d52-d260-4a38-b0a1-8c2ef307a50b)
+
+* Setting up Auth Keys in Tally Prime
+  F1 -> Addon Features -> F6
+  Set *Enable ERPNext Integration* to Yes and specify auth keys and other parameters
+  
+  ![image](https://github.com/laxmantandon/express_tally/assets/24727535/5039845f-6a04-49e2-b45c-4a55933630f7)
+
+* Migrating Data from Tally to ERPNext
+  From Gateway of Tally go to Display -> ERPNext -> Migrate to ERPNext
+  
+  ![image](https://github.com/laxmantandon/express_tally/assets/24727535/d7029c93-1a44-450b-b2f1-ef3655eb28ce)
 
 ## Planned Features
 

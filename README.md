@@ -11,7 +11,8 @@ This tool helps migration of data from Tally Prime (Masters and transactions) to
 ## Prerequisite
 * TDL Files https://github.com/laxmantandon/tally_migration_tdl.git
 * Tally Prime
-* ERPNext Active Site 
+* ERPNext Active Site
+* india_compliance app is required https://github.com/resilient-tech/india-compliance
 
 ## Installation
 

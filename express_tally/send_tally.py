@@ -90,7 +90,7 @@ def purchase():
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
-            'docstatus': [">", 0],
+            'docstatus': 1,
             'is_synced': ['!=', 'Yes'],
             'branch': payload['branch']
             },
@@ -124,7 +124,7 @@ def sales():
         filters={ 
             'posting_date' : ['>=', payload['date']],
             'company': payload['company'],
-            'docstatus': [">", 0],
+            'docstatus': 1,
             'is_synced': ['!=', 'Yes'],
             'branch': payload['branch']
             },
@@ -159,7 +159,7 @@ def payments():
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
-            'docstatus': [">", 0],
+            'docstatus': 1,
             'is_synced': ['!=', 'Yes'],
             'branch': payload['branch']
             },
@@ -187,12 +187,12 @@ def journal():
         'Journal Entry',
         fields=[
             'name', 'posting_date', 'docstatus', 'company',
-            'voucher_type', 'branch', 'mspl_voucher_type', 'cheque_no', 'cheque_date', 'user_remark'
+            'voucher_type', 'branch', 'mspl_voucher_type', 'cheque_no', 'cheque_date', 'user_remark', 'amended_from'
             ],
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
-            'docstatus': [">", 0],
+            'docstatus': 1,
             'is_synced': ['!=', 'Yes'],
             'branch': payload['branch'],
             'is_opening': 'No'
@@ -237,15 +237,18 @@ def customer_update():
 
 @frappe.whitelist()
 def update_tally_flag(doc, method):
-
+        
     if doc:
-        frappe.db.set_value(
-            doc.doctype,
-            doc.name,
-            {
-                "is_synced": 'No',
-                "sync_message": ""
-            }
-        )
+        if method == 'on_cancel' and doc.is_synced == 'No':
+            pass
+        else:
+            frappe.db.set_value(
+                doc.doctype,
+                doc.name,
+                {
+                    "is_synced": 'No',
+                    "sync_message": ""
+                }
+            )
 
-        doc.reload()
+            doc.reload()

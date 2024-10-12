@@ -79,16 +79,21 @@ def supplier():
 def purchase():
 
     payload = json.loads(frappe.request.data)
+
+    branch = payload['branch']
+    converted_branch = branch.split(",")
+
     purchase_invoices = frappe.db.get_all(
         'Purchase Invoice',
         fields=[
             'name', 'posting_date', 'docstatus', 'company', 'base_grand_total', 'base_net_total',
             'base_rounded_total', 'rounding_adjustment', 'modified', 'is_return', 'supplier', 'supplier_name', 'bill_no',
-            'amended_from', 'supplier_name_in_tally'
+            'amended_from', 'supplier_name_in_tally', 'branch'
             ],
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
+            'branch': ["in", converted_branch],
             'is_synced': ['!=', 'Yes']
             },
         limit=100
@@ -112,17 +117,23 @@ def purchase():
 def sales():
 
     payload = json.loads(frappe.request.data)
+
+    branch = payload['branch']
+    converted_branch = branch.split(",")
+    
     sales_invoices = frappe.db.get_all(
         'Sales Invoice',
         fields=[
             'name', 'posting_date', 'docstatus', 'company', 'base_grand_total', 'base_net_total',
             'base_rounded_total', 'rounding_adjustment', 'modified', 'is_return', 'customer', 'customer_name',
-            'supplier_name_in_tally', 'amended_from'
+            'supplier_name_in_tally', 'amended_from', 'branch'
             ],
+    
         filters={ 
             # 'posting_date' : ['>=', payload['date']],
             'posting_date' : ['>=', '2023-01-01'],
             'company': payload['company'],
+            'branch': ["in", converted_branch],
             'docstatus': ["in", ["1", "2"]],
             'is_synced': ['!=', 'Yes'],
             },
@@ -153,15 +164,21 @@ def sales():
 def payments():
 
     payload = json.loads(frappe.request.data)
+
+    branch = payload['branch']
+    converted_branch = branch.split(",")
+
     payments = frappe.db.get_all(
         'Payment Entry',
         fields=[
             'name', 'posting_date', 'docstatus', 'company', 'party', 'party_name',
-            'paid_to', 'paid_amount', 'remarks', 'payment_type', 'paid_from', 'amended_from', 'naming_series'
+            'paid_to', 'paid_amount', 'remarks', 'payment_type', 'paid_from', 'amended_from', 'naming_series',
+            'reference_no', 'reference_date', 'party_bank_account', 'branch'
             ],
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
+            'branch': ["in", converted_branch],
             'docstatus': ["in", ["1", "2"]],
             'is_synced': ['!=', 'Yes']
             # 'is_synced': ['!=', 'Yes']
@@ -188,15 +205,20 @@ def payments():
 def stock_journals():
 
     payload = json.loads(frappe.request.data)
+
+    branch = payload['branch']
+    converted_branch = branch.split(",")
+
     stock_jvs = frappe.db.get_all(
         'Stock Entry',
         fields=[
             'name', 'posting_date', 'docstatus', 'company',
-            'amended_from', 'naming_series', 'remarks', 'total_amount', 'to_warehouse', 'from_warehouse'
+            'branch', 'amended_from', 'naming_series', 'remarks', 'total_amount', 'to_warehouse', 'from_warehouse'
             ],
         filters={ 
             # 'modified' : ['>', payload['date']],
             'company': payload['company'],
+            'branch': ["in", converted_branch],
             'docstatus': ["in", ["1", "2"]],
             'is_synced': ['!=', 'Yes'],
             # 'is_synced': ['!=', 'Yes']
@@ -217,14 +239,19 @@ def stock_journals():
 def journal():
 
     payload = json.loads(frappe.request.data)
+
+    branch = payload['branch']
+    converted_branch = branch.split(",")
+
     payments = frappe.db.get_all(
         'Journal Entry',
         fields=[
             'name', 'posting_date', 'docstatus', 'company',
-            'voucher_type', 'cheque_no', 'cheque_date', 'user_remark', 'amended_from'
+            'custom_branch', 'voucher_type', 'cheque_no', 'cheque_date', 'user_remark', 'amended_from'
             ],
         filters={ 
             'company': payload['company'],
+            'custom_branch': ["in", converted_branch],
             'docstatus': ["in", ["1", "2"]],
             'is_synced': ['!=', 'Yes'],
             'is_opening': 'No'

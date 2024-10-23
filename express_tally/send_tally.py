@@ -263,6 +263,42 @@ def payments():
                 else:
                     payment['treferences'] = {}
 
+## draft entries 
+
+    draft_payments = frappe.db.get_all(
+        'Payment Entry',
+        fields=[
+            'name', 'posting_date', 'docstatus', 'company', 'party', 'party_name',
+            'paid_to', 'paid_amount', 'remarks', 'payment_type', 'paid_from', 'amended_from', 'naming_series',
+            'reference_no', 'reference_date', 'party_bank_account', 'branch'
+            ],
+        filters={ 
+            'company': payload['company'],
+            'branch': ["in", converted_branch],
+            'docstatus': "0",
+            'party': ["like", "XYZ%"],
+            'payment_type': "Receive",
+            'is_synced': ['!=', 'Yes']
+            # 'is_synced': ['!=', 'Yes']
+            },
+        limit=100
+        )
+    
+    if draft_payments:
+        for payment in draft_payments:
+            payment_no = payment['name']
+
+            if payment_no:
+                pi_no = frappe.get_doc('Payment Entry', payment_no)
+
+                if pi_no:
+                    payment['treferences'] = pi_no
+                else:
+                    payment['treferences'] = {}
+
+
+    payments.extend(draft_payments)
+
     return payments
 
 @frappe.whitelist()

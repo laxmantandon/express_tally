@@ -98,17 +98,50 @@ def purchase():
             },
         limit=100
         )
+
     if purchase_invoices:
         for purchase_invoice in purchase_invoices:
             purchase_invoice_no = purchase_invoice['name']
 
             if purchase_invoice_no:
-                pi_no = frappe.get_doc('Purchase Invoice', purchase_invoice_no)
+                pi_no = frappe.get_doc('Purchase Invoice', purchase_invoice_no).as_json()
+
+                pi_no = json.loads(pi_no)
+
+                items = pi_no.get("items")
+                for item in items:
+
+                    if item.get("pr_detail"):
+                        serial_and_batch_bundle  = frappe.db.get_value("Purchase Receipt Item", item.get("pr_detail"), "serial_and_batch_bundle")
+
+                    if item.get("batch_no"):
+                        item["batches"] = [
+                            {
+                                "batch_no": item.get("batch_no"),
+                                "warehouse": item.get("warehouse"),
+                                "qty": item.get("qty")
+                            }
+                        ]
+                    else:
+
+                        if serial_and_batch_bundle:
+                            bundle = frappe.get_doc("Serial and Batch Bundle", serial_and_batch_bundle).as_json()
+                            bundle = json.loads(bundle)
+                            item["batches"] = bundle.get("entries")
+                        else:
+                            item["batches"] = [
+                                {
+                                    "batch_no": "Primary Batch",
+                                    "warehouse": item.get("warehouse"),
+                                    "qty": item.get("qty")
+                                }
+                            ]
 
                 if pi_no:
                     purchase_invoice['tpurchaseinvoice'] = pi_no
                 else:
                     purchase_invoice['tpurchaseinvoice'] = {}
+
 
     return purchase_invoices
 
@@ -144,8 +177,39 @@ def sales():
             sales_invoice_no = sales_invoice['name']
 
             if sales_invoice_no:
-                pi_no = frappe.get_doc('Sales Invoice', sales_invoice_no)
-                cust = frappe.get_doc("Customer", pi_no.customer)
+                pi_no = frappe.get_doc('Sales Invoice', sales_invoice_no).as_json()
+                pi_no = json.loads(pi_no)
+
+                items = pi_no.get("items")
+                for item in items:
+
+                    if item.get("dn_detail"):
+                        serial_and_batch_bundle  = frappe.db.get_value("Delivery Note Item", item.get("dn_detail"), "serial_and_batch_bundle")
+
+                    if item.get("batch_no"):
+                        item["batches"] = [
+                            {
+                                "batch_no": item.get("batch_no"),
+                                "warehouse": item.get("warehouse"),
+                                "qty": item.get("qty")
+                            }
+                        ]
+                    else:
+
+                        if serial_and_batch_bundle:
+                            bundle = frappe.get_doc("Serial and Batch Bundle", serial_and_batch_bundle).as_json()
+                            bundle = json.loads(bundle)
+                            item["batches"] = bundle.get("entries")
+                        else:
+                            item["batches"] = [
+                                {
+                                    "batch_no": "Primary Batch",
+                                    "warehouse": item.get("warehouse"),
+                                    "qty": item.get("qty")
+                                }
+                            ]
+
+                cust = frappe.get_doc("Customer", pi_no.get("customer"))
                 credit_limit = 0
                 if len(cust.credit_limits) > 0:
                     credit_limit = cust.credit_limits[0].credit_limit

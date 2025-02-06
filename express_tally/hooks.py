@@ -57,7 +57,10 @@ app_license = "MIT"
 # ------------
 
 # before_install = "express_tally.install.before_install"
-# after_install = "express_tally.install.after_install"
+after_install = "express_tally.install.after_install"
+after_migrate = "express_tally.setup.after_migrate"
+
+before_uninstall = "express_tally.setup.before_uninstall"
 
 # Desk Notifications
 # ------------------

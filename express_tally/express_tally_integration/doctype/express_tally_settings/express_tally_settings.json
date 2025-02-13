@@ -8,17 +8,33 @@
   "api_fetching_settings_section",
   "from_date",
   "to_date",
+  "submit_vouchers",
   "column_break_hzxn",
   "company",
   "company_abbr",
+  "disable_invoice_rounding",
   "section_break_rmku",
   "accounts_column",
   "payroll_payable_account",
   "salary_account",
-  "default_account",
   "column_break_decl",
-  "payroll_payable_keyword",
-  "salary_account_keyword"
+  "default_account",
+  "tds_configuration_section",
+  "tds_payable_keyword",
+  "tds_payable_account",
+  "column_break_xppd",
+  "tds_keyword",
+  "tds_account",
+  "mappings_tab",
+  "data_mapping_section",
+  "item_mappings",
+  "section_break_tndc",
+  "create_missing_item",
+  "item_group",
+  "column_break_oihd",
+  "default_uom",
+  "gst_mappings_tab",
+  "gst_mappings"
  ],
  "fields": [
   {
@@ -88,29 +104,121 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "payroll_payable_keyword",
-   "fieldtype": "Data",
-   "label": "Payroll Payable Keyword",
-   "mandatory_depends_on": "payroll_payable_account"
-  },
-  {
-   "fieldname": "salary_account_keyword",
-   "fieldtype": "Data",
-   "label": "Salary Account Keyword",
-   "mandatory_depends_on": "salary_account"
-  },
-  {
+   "description": "Missing Account will be created under this Account",
    "fieldname": "default_account",
    "fieldtype": "Link",
    "label": "Default Account",
    "options": "Account",
    "reqd": 1
+  },
+  {
+   "fieldname": "data_mapping_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "item_mappings",
+   "fieldtype": "Table",
+   "label": "Item Mappings",
+   "options": "Item Mapping"
+  },
+  {
+   "fieldname": "gst_mappings",
+   "fieldtype": "Table",
+   "label": "GST Mappings",
+   "options": "GST Mapping"
+  },
+  {
+   "default": "0",
+   "fieldname": "submit_vouchers",
+   "fieldtype": "Check",
+   "label": "Submit Vouchers"
+  },
+  {
+   "fieldname": "mappings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Item Mapping"
+  },
+  {
+   "fieldname": "tds_configuration_section",
+   "fieldtype": "Section Break",
+   "label": "TDS Configuration"
+  },
+  {
+   "description": "In Purchase",
+   "fieldname": "tds_payable_keyword",
+   "fieldtype": "Data",
+   "label": "TDS Payable Keyword"
+  },
+  {
+   "fieldname": "tds_payable_account",
+   "fieldtype": "Link",
+   "label": "TDS Payable Account",
+   "mandatory_depends_on": "tds_payable_keyword",
+   "options": "Account"
+  },
+  {
+   "fieldname": "column_break_xppd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "In Sales",
+   "fieldname": "tds_keyword",
+   "fieldtype": "Data",
+   "label": "TDS Keyword"
+  },
+  {
+   "fieldname": "tds_account",
+   "fieldtype": "Link",
+   "label": "TDS Account",
+   "mandatory_depends_on": "tds_keyword",
+   "options": "Account"
+  },
+  {
+   "depends_on": "create_missing_item",
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "mandatory_depends_on": "create_missing_item",
+   "options": "Item Group"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_missing_item",
+   "fieldtype": "Check",
+   "label": "Create Missing Item"
+  },
+  {
+   "fieldname": "gst_mappings_tab",
+   "fieldtype": "Tab Break",
+   "label": "GST Mappings"
+  },
+  {
+   "fieldname": "section_break_tndc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_oihd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "create_missing_item",
+   "fieldname": "default_uom",
+   "fieldtype": "Link",
+   "label": "Default UOM",
+   "mandatory_depends_on": "create_missing_item",
+   "options": "UOM"
+  },
+  {
+   "default": "0",
+   "fieldname": "disable_invoice_rounding",
+   "fieldtype": "Check",
+   "label": "Disable Invoice Rounding"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-02-06 10:18:54.494903",
+ "modified": "2025-02-12 09:44:26.953971",
  "modified_by": "Administrator",
  "module": "Express Tally Integration",
  "name": "Express Tally Settings",

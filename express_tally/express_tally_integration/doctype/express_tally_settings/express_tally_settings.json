@@ -15,10 +15,14 @@
   "disable_invoice_rounding",
   "section_break_rmku",
   "accounts_column",
+  "create_missing_account",
+  "default_account",
+  "default_receivable_account",
+  "default_payable_account",
+  "column_break_decl",
   "payroll_payable_account",
   "salary_account",
-  "column_break_decl",
-  "default_account",
+  "employee_payable_account",
   "tds_configuration_section",
   "tds_payable_keyword",
   "tds_payable_account",
@@ -104,12 +108,13 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "create_missing_account",
    "description": "Missing Account will be created under this Account",
    "fieldname": "default_account",
    "fieldtype": "Link",
    "label": "Default Account",
-   "options": "Account",
-   "reqd": 1
+   "mandatory_depends_on": "create_missing_account",
+   "options": "Account"
   },
   {
    "fieldname": "data_mapping_section",
@@ -213,12 +218,39 @@
    "fieldname": "disable_invoice_rounding",
    "fieldtype": "Check",
    "label": "Disable Invoice Rounding"
+  },
+  {
+   "fieldname": "default_receivable_account",
+   "fieldtype": "Link",
+   "label": "Default Receivable Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_payable_account",
+   "fieldtype": "Link",
+   "label": "Default Payable Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "create_missing_account",
+   "fieldtype": "Check",
+   "label": "Create Missing Account"
+  },
+  {
+   "fieldname": "employee_payable_account",
+   "fieldtype": "Link",
+   "label": "Employee Payable Account",
+   "options": "Account",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-02-12 09:44:26.953971",
+ "modified": "2025-02-14 11:47:44.421770",
  "modified_by": "Administrator",
  "module": "Express Tally Integration",
  "name": "Express Tally Settings",

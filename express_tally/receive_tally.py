@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import frappe
 import json
+import re
 from frappe.utils import getdate
 
 @frappe.whitelist()
@@ -711,25 +712,23 @@ def create_journal_entry(data):
     tally_settings = frappe.get_single('Express Tally Settings')
     has_data = frappe.db.exists('Journal Entry', { 'tally_masterid': data.get('tally_masterid') })
     company_abbr = tally_settings.company_abbr
+    create_missing_account = tally_settings.create_missing_account
     submit_vouchers = tally_settings.submit_vouchers
-    payroll_payable_account = tally_settings.payroll_payable_account
-    salary_account = tally_settings.salary_account
     default_account = tally_settings.default_account
+    employee_payable_account = tally_settings.employee_payable_account
     abbr_len = -1 * (len(company_abbr) + 3)
     if not has_data:
         try:
             for row in data.get('accounts'):
                 if row.get('account'):
                     row['user_remark'] = row.get('account')
-                    # if payroll_payable_account and payroll_payable_keyword:
-                    #     if payroll_payable_keyword in row.get('account'):
-                    #         row['account'] = payroll_payable_account
-                    # if salary_account and salary_account_keyword:
-                    #     if salary_account_keyword in row.get('account'):
-                    #         row['account'] = salary_account
                     if not frappe.db.exists('Account', row.get('account')):
                         account_name = row.get('account')[:abbr_len]
-                        if frappe.db.exists('Customer', account_name):
+                        if get_employee_account(account_name):
+                            row['account'] = employee_payable_account
+                            row['party_type'] = 'Employee'
+                            row['party'] = get_employee_account(account_name)
+                        elif frappe.db.exists('Customer', account_name):
                             row['account'] = get_party_account('Customer', account_name)
                             row['party_type'] = 'Customer'
                             row['party'] = account_name
@@ -737,7 +736,7 @@ def create_journal_entry(data):
                             row['account'] = get_party_account('Supplier', account_name)
                             row['party_type'] = 'Supplier'
                             row['party'] = account_name
-                        else:
+                        elif create_missing_account:
                             create_coa(default_account, account_name)
             doc = frappe.get_doc(data)
             doc.insert()
@@ -759,13 +758,20 @@ def create_coa(parent, account_name):
         account_doc = frappe.new_doc('Account')
         account_doc.parent_account = parent
         account_doc.account_name = account_name
+        account_doc.disabled = 0
         account_doc.insert()
 
 def get_party_account(party_type, party):
     '''
         Method to get Customer Account
     '''
+    default_receivable_account = frappe.db.get_single_value('Express Tally Settings', 'default_receivable_account')
+    default_payable_account = frappe.db.get_single_value('Express Tally Settings', 'default_payable_account')
     account = None
+    if party_type == 'Customer':
+        account = default_receivable_account
+    if party_type == 'Supplier':
+        account = default_payable_account
     if frappe.db.exists('Party Account', { 'parenttype':party_type, 'parent':party, 'parentfield':'accounts' }):
         account = frappe.db.get_value('Party Account', { 'parenttype':party_type, 'parent':party, 'parentfield':'accounts' }, 'account')
     return account
@@ -827,3 +833,14 @@ def create_failed_record(data, message):
         doc.payload = frappe.as_json(data)
         doc.exception = message
         doc.insert()
+
+def get_employee_account(account_name):
+    '''
+        Method to check wether the Account is associcated with Employee
+    '''
+    matches = re.findall(r"\((.*?)\)", account_name)
+    if matches:
+        employee_id = matches[0]
+        if frappe.db.exists('Employee', employee_id.upper()):
+            return employee_id.upper()
+    return False

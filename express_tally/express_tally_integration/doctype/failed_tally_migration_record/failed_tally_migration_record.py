@@ -18,6 +18,15 @@ def retry_failed_voucher(failed_record_id):
 		doc = frappe.get_doc('Failed Tally Migration Record', failed_record_id)
 		payload = json.loads(doc.payload)
 		voucher = frappe.get_doc(payload)
-		voucher.insert()
+		voucher.save()
+		try:
+			voucher.submit()
+		except Exception as e:
+			frappe.log_error(
+				title="{0} submisison".format(voucher.doctype),
+				message=str(e),
+				reference_doctype=voucher.doctype,
+				reference_name=voucher.name,
+			)
 		docname = voucher.name
 		return docname

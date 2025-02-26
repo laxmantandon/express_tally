@@ -33,7 +33,10 @@ function create_failed_record(frm) {
         },
         freeze: true,
         callback: (r) => {
-            console.log(r.message);
+            if (r.message) {
+                frm.set_value('reference_document', r.message)
+                frm.save();
+            }
         }
     });
 }

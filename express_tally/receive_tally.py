@@ -518,8 +518,12 @@ def voucher():
     vouchers_data = payload['data']
     
     tally_response = []
+    idx = 0
+    print("\n\n\n Gettting Data")
 
     for voucher_data in vouchers_data:
+        print("Idx : ", idx)
+        idx += 1
         from_date = frappe.db.get_single_value('Express Tally Settings', 'from_date')
         to_date = frappe.db.get_single_value('Express Tally Settings', 'to_date')
         if from_date and to_date and voucher_data.get('posting_date'):
@@ -540,8 +544,11 @@ def voucher():
             try:
                 doc = frappe.get_doc(voucher_data)
                 doc.insert()
+                # Removed docname from return to remove updation to tally
+                # tally_response.append(
+                #     {'name': voucher_data['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'})
                 tally_response.append(
-                    {'name': voucher_data['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'})
+                    {'name': voucher_data['tally_masterid'], 'tally_object': 'voucher', 'message': 'Success'})
             except Exception as e:
                 tally_response.append(
                     {'name': voucher_data['tally_masterid'], 'tally_object': 'voucher', 'message': str(e)})
@@ -552,9 +559,12 @@ def create_sales_invoice(data):
     '''
         Method to create Sales Invoices
     '''
-    has_data = frappe.db.exists('Sales Invoice', { 'tally_masterid': data.get('tally_masterid') })
+    has_data = frappe.db.exists('Sales Invoice', { 'tally_voucherno': data.get('tally_voucherno') })
     tally_settings = frappe.get_single('Express Tally Settings')
     disable_invoice_rounding = tally_settings.disable_invoice_rounding
+    set_docname_as_tally = tally_settings.set_docname_as_tally
+    if set_docname_as_tally and not has_data:
+        has_data = frappe.db.exists('Sales Invoice', data.get('tally_voucherno'))
     submit_vouchers = tally_settings.submit_vouchers
     tds_keyword = tally_settings.tds_keyword
     tds_account = tally_settings.tds_account
@@ -609,10 +619,14 @@ def create_sales_invoice(data):
             doc = frappe.get_doc(data)
             doc.customer = get_formatted_value(data.get('customer'))
             doc.disable_rounded_total = disable_invoice_rounding
+            if set_docname_as_tally and data.get('tally_voucherno'):
+                doc.name = data.get('tally_voucherno')
             doc.insert()
             if submit_vouchers:
                 doc.submit()
-            response = {'name': data['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'}
+            # Removed docname from return to remove updation to tally
+            # response = {'name': data['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'}
+            response = {'name': data['tally_masterid'], 'tally_object': 'voucher', 'message': 'Success'}
         except Exception as e:
             create_failed_record(data, str(e))
             response = {'name': data['tally_masterid'], 'tally_object': 'voucher', 'message': str(e)}
@@ -624,8 +638,11 @@ def create_purchase_invoice(data):
     '''
         Method to create Purchase Invoices
     '''
-    has_data = frappe.db.exists('Purchase Invoice', { 'tally_masterid': data.get('tally_masterid') })
+    has_data = frappe.db.exists('Purchase Invoice', { 'tally_voucherno': data.get('tally_voucherno') })
     tally_settings = frappe.get_single('Express Tally Settings')
+    set_docname_as_tally = tally_settings.set_docname_as_tally
+    if set_docname_as_tally and not has_data:
+        has_data = frappe.db.exists('Purchase Invoice', data.get('tally_voucherno'))
     submit_vouchers = tally_settings.submit_vouchers
     create_missing_item = tally_settings.create_missing_item
     item_group = tally_settings.item_group
@@ -694,10 +711,14 @@ def create_purchase_invoice(data):
             doc = frappe.get_doc(data)
             doc.supplier = get_formatted_value(data.get('supplier'))
             doc.disable_rounded_total = disable_invoice_rounding
+            if set_docname_as_tally and data.get('tally_voucherno'):
+                doc.name = data.get('tally_voucherno')
             doc.insert()
             if submit_vouchers:
                 doc.submit()
-            response = {'name': data['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'}
+            # Removed docname from return to remove updation to tally
+            # response = {'name': data['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'}
+            response = {'name': data['tally_masterid'], 'tally_object': 'voucher', 'message': 'Success'}
         except Exception as e:
             create_failed_record(data, str(e))
             response = {'name': data.get('tally_masterid'), 'tally_voucherno':data.get('tally_voucherno'), 'posting_date':data.get('posting_date'), 'tally_object': 'voucher', 'message': str(e)}
@@ -710,7 +731,10 @@ def create_journal_entry(data):
         Method to create Journal Entry
     '''
     tally_settings = frappe.get_single('Express Tally Settings')
-    has_data = frappe.db.exists('Journal Entry', { 'tally_masterid': data.get('tally_masterid') })
+    has_data = frappe.db.exists('Journal Entry', { 'tally_voucherno': data.get('tally_voucherno') })
+    set_docname_as_tally = tally_settings.set_docname_as_tally
+    if set_docname_as_tally and not has_data:
+        has_data = frappe.db.exists('Journal Entry', data.get('tally_voucherno'))
     company_abbr = tally_settings.company_abbr
     create_missing_account = tally_settings.create_missing_account
     submit_vouchers = tally_settings.submit_vouchers
@@ -739,10 +763,14 @@ def create_journal_entry(data):
                         elif create_missing_account:
                             create_coa(default_account, account_name)
             doc = frappe.get_doc(data)
+            if set_docname_as_tally and data.get('tally_voucherno'):
+                doc.name = data.get('tally_voucherno')
             doc.insert()
             if submit_vouchers:
                 doc.submit()
-            response = {'name': data['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'}
+            # Removed docname from return to remove updation to tally
+            # response = {'name': data['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'}
+            response = {'name': data['tally_masterid'], 'tally_object': 'voucher', 'message': 'Success'}
         except Exception as e:
             create_failed_record(data, str(e))
             response = {'name': data['tally_masterid'], 'tally_object': 'voucher', 'message': str(e)}
@@ -824,6 +852,8 @@ def create_failed_record(data, message):
     tally_voucher_no = data.get('tally_voucherno', '')
     posting_date = data.get('posting_date', '')
     voucher_type = data.get('doctype')
+    if frappe.db.exists(voucher_type, tally_voucher_no):
+        return
     if not frappe.db.exists('Failed Tally Migration Record', { 'tally_masterid':tally_masterid, 'voucher_type':voucher_type, 'exception':message }):
         doc = frappe.new_doc('Failed Tally Migration Record')
         doc.tally_masterid = tally_masterid

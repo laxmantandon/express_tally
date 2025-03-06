@@ -9,6 +9,7 @@
   "from_date",
   "to_date",
   "submit_vouchers",
+  "set_docname_as_tally",
   "column_break_hzxn",
   "company",
   "company_abbr",
@@ -245,12 +246,18 @@
    "label": "Employee Payable Account",
    "options": "Account",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "set_docname_as_tally",
+   "fieldtype": "Check",
+   "label": "Set Docname as Tally"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-02-14 11:47:44.421770",
+ "modified": "2025-03-04 11:56:20.059674",
  "modified_by": "Administrator",
  "module": "Express Tally Integration",
  "name": "Express Tally Settings",

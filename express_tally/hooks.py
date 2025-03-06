@@ -92,13 +92,17 @@ before_uninstall = "express_tally.setup.before_uninstall"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Sales Invoice": {
+		"autoname": "express_tally.express_tally_integration.doc_events.autoname"
+	},
+    "Purchase Invoice": {
+		"autoname": "express_tally.express_tally_integration.doc_events.autoname"
+	},
+    "Journal Entry": {
+		"autoname": "express_tally.express_tally_integration.doc_events.autoname"
+	}
+}
 
 # Scheduled Tasks
 # ---------------

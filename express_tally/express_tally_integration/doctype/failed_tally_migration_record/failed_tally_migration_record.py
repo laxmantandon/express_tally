@@ -6,12 +6,26 @@ import json
 from frappe.model.document import Document
 
 class FailedTallyMigrationRecord(Document):
-	pass
+	def validate(self):
+		self.calculate_amount()
+
+	def calculate_amount(self):
+		total_amount = 0
+		if self.payload:
+			payload = json.loads(self.payload)
+			if self.voucher_type in ['Sales Invoice', 'Purchase Invoice']:
+				for item in payload.get('items', []):
+					item_amount = item.get('amount', 0)
+					total_amount += float(item_amount)
+				for item in payload.get('taxes', []):
+					tax_amount = item.get('tax_amount', 0)
+					total_amount += float(tax_amount)
+		self.amount = total_amount
 
 @frappe.whitelist()
 def retry_failed_voucher(failed_record_id):
 	'''
-        Method to create missing Voucher
+		Method to create missing Voucher
 	'''
 	docname = None
 	if frappe.db.exists('Failed Tally Migration Record', failed_record_id):

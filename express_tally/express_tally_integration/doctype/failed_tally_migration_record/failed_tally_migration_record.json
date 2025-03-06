@@ -5,13 +5,14 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "tally_masterid",
   "tally_voucher_no",
+  "tally_masterid",
   "voucher_type",
   "reference_document",
   "column_break_nehb",
   "posting_date",
   "exception",
+  "amount",
   "section_break_thcu",
   "payload"
  ],
@@ -19,8 +20,6 @@
   {
    "fieldname": "tally_masterid",
    "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Tally Master ID",
    "read_only": 1
   },
@@ -75,12 +74,19 @@
    "label": "Reference Document",
    "options": "voucher_type",
    "read_only": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "read_only": 1
   }
  ],
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-13 10:40:25.304785",
+ "modified": "2025-03-06 11:45:36.925576",
  "modified_by": "Administrator",
  "module": "Express Tally Integration",
  "name": "Failed Tally Migration Record",

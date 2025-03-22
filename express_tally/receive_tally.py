@@ -207,7 +207,7 @@ def customer_opening():
                 tally_response.append(
                         {'name': bill['customer'], 'tally_object': 'Ledger', 'message': str(e)})
 
-    return {"status": True, 'data': tally_response}    
+    return {"status": True, 'data': tally_response}
 
 @frappe.whitelist()
 def supplier_opening():
@@ -273,7 +273,7 @@ def supplier_opening():
                 tally_response.append(
                         {'name': bill['supplier'], 'tally_object': 'Ledger', 'message': str(e)})
 
-    return {"status": True, 'data': tally_response}    
+    return {"status": True, 'data': tally_response}
 
 
 @frappe.whitelist()
@@ -306,7 +306,7 @@ def supplier():
             tally_response.append(
                     {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': 'Already Exists'})
 
-    return {"status": True, 'data': tally_response}    
+    return {"status": True, 'data': tally_response}
 
 
 def create_account(customer):
@@ -516,7 +516,7 @@ def create_hsn(item):
 def voucher():
     payload = json.loads(frappe.request.data)
     vouchers_data = payload['data']
-    
+
     tally_response = []
     idx = 0
     print("\n\n\n Gettting Data")
@@ -552,7 +552,7 @@ def voucher():
             except Exception as e:
                 tally_response.append(
                     {'name': voucher_data['tally_masterid'], 'tally_object': 'voucher', 'message': str(e)})
- 
+
     return {"status": True, 'data': tally_response}
 
 def create_sales_invoice(data):
@@ -744,8 +744,11 @@ def create_journal_entry(data):
     if not has_data:
         try:
             for row in data.get('accounts'):
+                row['party_type'] = ''
+                row['party'] = ''
                 if row.get('account'):
                     row['user_remark'] = row.get('account')
+                    row['account'] = get_formatted_value(row.get('account'))
                     if not frappe.db.exists('Account', row.get('account')):
                         account_name = row.get('account')[:abbr_len]
                         if get_employee_account(account_name):

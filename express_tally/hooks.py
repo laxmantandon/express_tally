@@ -57,7 +57,10 @@ app_license = "MIT"
 # ------------
 
 # before_install = "express_tally.install.before_install"
-# after_install = "express_tally.install.after_install"
+after_install = "express_tally.install.after_install"
+after_migrate = "express_tally.setup.after_migrate"
+
+before_uninstall = "express_tally.setup.before_uninstall"
 
 # Desk Notifications
 # ------------------
@@ -89,13 +92,17 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Sales Invoice": {
+		"autoname": "express_tally.express_tally_integration.doc_events.autoname"
+	},
+    "Purchase Invoice": {
+		"autoname": "express_tally.express_tally_integration.doc_events.autoname"
+	},
+    "Journal Entry": {
+		"autoname": "express_tally.express_tally_integration.doc_events.autoname"
+	}
+}
 
 # Scheduled Tasks
 # ---------------

@@ -1,0 +1,281 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-04 20:18:11.335822",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "api_fetching_settings_section",
+  "from_date",
+  "to_date",
+  "submit_vouchers",
+  "set_docname_as_tally",
+  "column_break_hzxn",
+  "company",
+  "company_abbr",
+  "disable_invoice_rounding",
+  "section_break_rmku",
+  "accounts_column",
+  "create_missing_account",
+  "default_account",
+  "default_receivable_account",
+  "default_payable_account",
+  "column_break_decl",
+  "payroll_payable_account",
+  "salary_account",
+  "employee_payable_account",
+  "tds_configuration_section",
+  "tds_payable_keyword",
+  "tds_payable_account",
+  "column_break_xppd",
+  "tds_keyword",
+  "tds_account",
+  "mappings_tab",
+  "data_mapping_section",
+  "item_mappings",
+  "section_break_tndc",
+  "create_missing_item",
+  "item_group",
+  "column_break_oihd",
+  "default_uom",
+  "gst_mappings_tab",
+  "gst_mappings"
+ ],
+ "fields": [
+  {
+   "fieldname": "api_fetching_settings_section",
+   "fieldtype": "Section Break",
+   "label": "API Fetching Settings"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "To Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_hzxn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "company_abbr",
+   "fieldtype": "Data",
+   "label": "Company Abbr",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_rmku",
+   "fieldtype": "Section Break",
+   "label": "Accounts"
+  },
+  {
+   "fieldname": "accounts_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payroll_payable_account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Payroll Payable Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "salary_account",
+   "fieldtype": "Link",
+   "label": "Salary Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_decl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "create_missing_account",
+   "description": "Missing Account will be created under this Account",
+   "fieldname": "default_account",
+   "fieldtype": "Link",
+   "label": "Default Account",
+   "mandatory_depends_on": "create_missing_account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "data_mapping_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "item_mappings",
+   "fieldtype": "Table",
+   "label": "Item Mappings",
+   "options": "Item Mapping"
+  },
+  {
+   "fieldname": "gst_mappings",
+   "fieldtype": "Table",
+   "label": "GST Mappings",
+   "options": "GST Mapping"
+  },
+  {
+   "default": "0",
+   "fieldname": "submit_vouchers",
+   "fieldtype": "Check",
+   "label": "Submit Vouchers"
+  },
+  {
+   "fieldname": "mappings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Item Mapping"
+  },
+  {
+   "fieldname": "tds_configuration_section",
+   "fieldtype": "Section Break",
+   "label": "TDS Configuration"
+  },
+  {
+   "description": "In Purchase",
+   "fieldname": "tds_payable_keyword",
+   "fieldtype": "Data",
+   "label": "TDS Payable Keyword"
+  },
+  {
+   "fieldname": "tds_payable_account",
+   "fieldtype": "Link",
+   "label": "TDS Payable Account",
+   "mandatory_depends_on": "tds_payable_keyword",
+   "options": "Account"
+  },
+  {
+   "fieldname": "column_break_xppd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "In Sales",
+   "fieldname": "tds_keyword",
+   "fieldtype": "Data",
+   "label": "TDS Keyword"
+  },
+  {
+   "fieldname": "tds_account",
+   "fieldtype": "Link",
+   "label": "TDS Account",
+   "mandatory_depends_on": "tds_keyword",
+   "options": "Account"
+  },
+  {
+   "depends_on": "create_missing_item",
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "mandatory_depends_on": "create_missing_item",
+   "options": "Item Group"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_missing_item",
+   "fieldtype": "Check",
+   "label": "Create Missing Item"
+  },
+  {
+   "fieldname": "gst_mappings_tab",
+   "fieldtype": "Tab Break",
+   "label": "GST Mappings"
+  },
+  {
+   "fieldname": "section_break_tndc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_oihd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "create_missing_item",
+   "fieldname": "default_uom",
+   "fieldtype": "Link",
+   "label": "Default UOM",
+   "mandatory_depends_on": "create_missing_item",
+   "options": "UOM"
+  },
+  {
+   "default": "0",
+   "fieldname": "disable_invoice_rounding",
+   "fieldtype": "Check",
+   "label": "Disable Invoice Rounding"
+  },
+  {
+   "fieldname": "default_receivable_account",
+   "fieldtype": "Link",
+   "label": "Default Receivable Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_payable_account",
+   "fieldtype": "Link",
+   "label": "Default Payable Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "create_missing_account",
+   "fieldtype": "Check",
+   "label": "Create Missing Account"
+  },
+  {
+   "fieldname": "employee_payable_account",
+   "fieldtype": "Link",
+   "label": "Employee Payable Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "set_docname_as_tally",
+   "fieldtype": "Check",
+   "label": "Set Docname as Tally"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-03-04 11:56:20.059674",
+ "modified_by": "Administrator",
+ "module": "Express Tally Integration",
+ "name": "Express Tally Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

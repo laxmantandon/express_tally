@@ -395,6 +395,33 @@ def supplier():
 
     return {"status": True, 'data': tally_response}    
 
+@frappe.whitelist()
+def account():
+    payload = json.loads(frappe.request.data)
+    accounts = payload['data']
+
+    tally_response = []
+
+    for account in accounts:
+        is_exists = frappe.db.exists(
+            account['doctype'], account['account_name'])
+        if not is_exists:
+            try:
+
+                doc = frappe.get_doc(account)
+                doc.insert()
+
+                tally_response.append(
+                    {'name': account['account_name'], 'tally_object': 'Ledger', 'message': 'Success'})
+            except Exception as e:
+                tally_response.append(
+                    {'name': account['account_name'], 'tally_object': 'Ledger', 'message': str(e)})
+        else:
+            tally_response.append(
+                    {'name': account['account_name'], 'tally_object': 'Ledger', 'message': 'Already Exists'})
+        
+    return {"status": True, 'data': tally_response}    
+
 
 def create_account(customer):
     try:

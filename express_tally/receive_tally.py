@@ -624,8 +624,9 @@ def voucher():
         if not sales_exists:
             try:
                 doc = frappe.get_doc(sale)
-                doc.insert()
-                doc.submit()
+                doc.insert(set_name=sale['tally_voucherno'])
+                # doc.save()
+                # doc.submit()
                 tally_response.append(
                     {'name': sale['tally_masterid'], 'docname': doc.name, 'tally_object': 'voucher', 'message': 'Success'})
             except Exception as e:

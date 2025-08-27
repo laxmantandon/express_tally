@@ -228,17 +228,18 @@ def customer_opening():
                     "customer": bill['customer'],
                     "customer_name": bill['customer'],
                     "company": bill['company'],
-                    "currency": "INR",
+                    # "currency": "INR",
                     "set_posting_time": True,
-                    "price_list_currency": "INR",
+                    # "price_list_currency": "INR",
                     "posting_date": bill['posting_date'],
                     "due_date": bill['due_date'],
                     "debit_to": bill['debit_to'], #"Test 3 Customer - ETPL",
-                    "party_account_currency": "INR",
+                    # "party_account_currency": "INR",
                     "is_opening": 'Yes',
                     "is_return": bill['is_return'],
                     "grand_total": bill['amount'],
                     "against_income_account": bill['against_income_account'],#"Temporary Opening - ETPL",
+                    "disable_rounded_total": 1,
                     "doctype": "Sales Invoice",
                     "items": [
                         {
@@ -270,7 +271,7 @@ def customer_opening():
 
                 doc = frappe.get_doc(req)
                 doc.flags.ignore_mandatory = True
-                doc.insert()
+                doc.insert(set_name=bill['bill_name'])
                 doc.submit()
                 tally_response.append(
                         {'name': bill['customer'], 'tally_object': 'Ledger', 'message': 'Success'})
@@ -294,17 +295,18 @@ def supplier_opening():
                     "supplier": bill['supplier'],
                     "supplier_name": bill['supplier'],
                     "company": bill['company'],
-                    "currency": "INR",
+                    # "currency": "INR",
                     "set_posting_time": True,
-                    "price_list_currency": "INR",
+                    # "price_list_currency": "INR",
                     "posting_date": bill['posting_date'],
                     "due_date": bill['due_date'],
                     "credit_to": bill['credit_to'], #"Test 3 Customer - ETPL",
-                    "party_account_currency": "INR",
+                    # "party_account_currency": "INR",
                     "is_opening": 'Yes',
                     "is_return": bill['is_return'],
                     "grand_total": bill['amount'],
                     "against_expense_account": bill['against_expense_account'],#"Temporary Opening - ETPL",
+                    "disable_rounded_total": 1,
                     "doctype": "Purchase Invoice",
                     "items": [
                         {
@@ -336,7 +338,7 @@ def supplier_opening():
 
                 doc = frappe.get_doc(req)
                 doc.flags.ignore_mandatory = True
-                doc.insert()
+                doc.insert(set_name=bill['bill_name'])
                 # doc.submit()
                 tally_response.append(
                         {'name': bill['supplier'], 'tally_object': 'Ledger', 'message': 'Success'})

@@ -221,8 +221,15 @@ def customer_opening():
 
     tally_response = []
     for b in bills:
+
         for bill in b['bills']:
             try:
+
+                if frappe.db.exists("Sales Invoice", bill['bill_name']):
+                    inv = frappe.get_doc("Sales Invoice", bill['bill_name'])
+                    inv.cancel()
+                    inv.delete()
+
                 req = {
                     "remarks": bill['bill_name'],
                     "customer": bill['customer'],
@@ -290,6 +297,11 @@ def supplier_opening():
     for b in bills:
         for bill in b['bills']:
             try:
+                if frappe.db.exists("Purchase Invoice", bill['bill_name']):
+                    inv = frappe.get_doc("Purchase Invoice", bill['bill_name'])
+                    inv.cancel()
+                    inv.delete()
+
                 req = {
                     "remarks": bill['bill_name'],
                     "supplier": bill['supplier'],
@@ -339,7 +351,7 @@ def supplier_opening():
                 doc = frappe.get_doc(req)
                 doc.flags.ignore_mandatory = True
                 doc.insert(set_name=bill['bill_name'])
-                # doc.submit()
+                doc.submit()
                 tally_response.append(
                         {'name': bill['supplier'], 'tally_object': 'Ledger', 'message': 'Success'})
             except Exception as e:

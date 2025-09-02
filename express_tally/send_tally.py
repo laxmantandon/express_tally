@@ -123,7 +123,7 @@ def purchase():
                             }
                         ]
                     else:
-
+                        serial_and_batch_bundle  = item.get("serial_and_batch_bundle")
                         if serial_and_batch_bundle:
                             bundle = frappe.get_doc("Serial and Batch Bundle", serial_and_batch_bundle).as_json()
                             bundle = json.loads(bundle)
@@ -195,7 +195,7 @@ def sales():
                             }
                         ]
                     else:
-
+                        serial_and_batch_bundle  = item.get("serial_and_batch_bundle")
                         if serial_and_batch_bundle:
                             bundle = frappe.get_doc("Serial and Batch Bundle", serial_and_batch_bundle).as_json()
                             bundle = json.loads(bundle)

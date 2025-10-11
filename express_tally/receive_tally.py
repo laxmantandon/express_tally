@@ -169,26 +169,26 @@ def customer():
 
     for customer in customers:
         is_exists = frappe.db.exists(
-            customer['doctype'], customer['customer_name'])
+            customer['doctype'], customer['customer_code'])
         if not is_exists:
             try:
                 create_account(customer)
 
                 doc = frappe.get_doc(customer)
-                doc.insert()
+                doc.insert(set_name=customer['customer_code'])
 
                 create_contact(customer)
                 create_address(customer)
 
 
                 tally_response.append(
-                    {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': 'Success'})
+                    {'name': customer['customer_code'], 'tally_object': 'Ledger', 'message': 'Success'})
             except Exception as e:
                 tally_response.append(
-                    {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': str(e)})
+                    {'name': customer['customer_code'], 'tally_object': 'Ledger', 'message': str(e)})
         else:
             tally_response.append(
-                    {'name': customer['customer_name'], 'tally_object': 'Ledger', 'message': 'Already Exists'})
+                    {'name': customer['customer_code'], 'tally_object': 'Ledger', 'message': 'Already Exists'})
 
         # else:
         #     try:
@@ -467,7 +467,7 @@ def create_account(customer):
 def create_contact(customer):
     try:
         doctype = customer['doctype']
-        cus_name = customer['customer_name'] if doctype == 'Customer' else customer['supplier_name']
+        cus_name = customer['customer_code'] if doctype == 'Customer' else customer['supplier_name']
 
         req = {
             "name": customer['ledgercontact'],
@@ -531,7 +531,7 @@ def create_address(customer):
         address3 = customer['address3'] if 'address3' in customer else ""
         address4 = customer['address4'] if 'address4' in customer else ""
         doctype = customer['doctype']
-        cus_name = customer['customer_name'] if doctype == 'Customer' else customer['supplier_name']
+        cus_name = customer['customer_code'] if doctype == 'Customer' else customer['supplier_name']
 
         req = {
             "name": cus_name+"-Billing",
@@ -543,7 +543,7 @@ def create_address(customer):
             "state": customer['state'] if 'state' in customer else "",
             "country": customer['country'] if 'country' in customer else "",
             "pincode": customer['pincode'] if 'pincode' in customer else "",
-            # "phone": customer['customer_name'],
+            # "phone": customer['customer_code'],
             "gstin": customer['partygstin'] if 'partygstin' in customer else "",
             "gst_state": customer['state'] if 'state' in customer else "",
             "gst_state_number": customer['state_code'] if 'state_code' in customer else "",
@@ -567,10 +567,10 @@ def create_address(customer):
         doc = frappe.get_doc(req)
         doc.insert()
 
-        print('Success- Address') # return {'name': customer['customer_name'], 'tally_object': 'Ledger_Address', 'message': 'Success'}
+        print('Success- Address') # return {'name': customer['customer_code'], 'tally_object': 'Ledger_Address', 'message': 'Success'}
     except Exception as e:
         print(str(e))
-        # return {'name': customer['customer_name'], 'tally_object': 'Ledger_Address', 'message': str(e)}
+        # return {'name': customer['customer_code'], 'tally_object': 'Ledger_Address', 'message': str(e)}
 
 
 

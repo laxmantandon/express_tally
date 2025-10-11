@@ -370,7 +370,7 @@ def supplier():
 
     for supplier in suppliers:
         is_exists = frappe.db.exists(
-            supplier['doctype'], supplier['supplier_name'])
+            supplier['doctype'], supplier['customer_code'])
         if not is_exists:
             try:
                 create_account(supplier)
@@ -382,13 +382,13 @@ def supplier():
                 create_address(supplier)
 
                 tally_response.append(
-                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': 'Success'})
+                    {'name': supplier['customer_code'], 'tally_object': 'Ledger', 'message': 'Success'})
             except Exception as e:
                 tally_response.append(
-                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': str(e)})
+                    {'name': supplier['customer_code'], 'tally_object': 'Ledger', 'message': str(e)})
         else:
             tally_response.append(
-                    {'name': supplier['supplier_name'], 'tally_object': 'Ledger', 'message': 'Already Exists'})
+                    {'name': supplier['customer_code'], 'tally_object': 'Ledger', 'message': 'Already Exists'})
         # else:
         #     try:
         #         frappe.db.set_value(supplier['doctype'], supplier['supplier_name'], {

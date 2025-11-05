@@ -376,7 +376,7 @@ def supplier():
                 create_account(supplier)
 
                 doc = frappe.get_doc(supplier)
-                doc.insert()
+                doc.insert(set_name=supplier['customer_code'])
 
                 create_contact(supplier)
                 create_address(supplier)

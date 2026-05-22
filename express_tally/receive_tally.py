@@ -441,7 +441,8 @@ def create_account(customer):
     try:
         doctype = customer['doctype']
         cus_name = customer['customer_name'] if doctype == 'Customer' else customer['supplier_name']
-        parent_account = 'Accounts Receivable - ETPL' if doctype == 'Customer' else 'Accounts Payable - ETPL'
+        company_abbr = frappe.get_cached_value('Company', customer['company'], 'abbr')
+        parent_account = f'Accounts Receivable - {company_abbr}' if doctype == 'Customer' else f'Accounts Payable - {company_abbr}'
         account_type = 'Receivable' if doctype == 'Customer' else 'Payable'
 
         req = {
